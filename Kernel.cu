@@ -23,10 +23,8 @@ __global__ void VectorAdd(const float* a, const float* b, float* ans, int n)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
-int main()
+void VectorAddition()
 {
-	//Hello << <1, 4 >> > ();
-
 	int N = 512;
 	size_t vecSize = N * sizeof(float);
 
@@ -35,7 +33,7 @@ int main()
 	float* outVec = static_cast<float*>(malloc(vecSize));
 
 	// Initialize host array
-	for (int i = 0 ; i < N ; ++i)
+	for (int i = 0; i < N; ++i)
 	{
 		vec1[i] = i * 1.0f;
 		vec2[i] = i * 2.0f;
@@ -54,7 +52,7 @@ int main()
 	// Launch Kernel
 	//int threadsPerBlock = 256;
 	//int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
-	VectorAdd << <8, 64>> > (gpuVec1, gpuVec2, gpuResult, vecSize);
+	VectorAdd << <8, 64 >> > (gpuVec1, gpuVec2, gpuResult, vecSize);
 
 	// Copy result back from the GPU to CPU!
 	cudaMemcpy(outVec, gpuResult, vecSize, cudaMemcpyDeviceToHost);
@@ -71,11 +69,16 @@ int main()
 	free(vec1);
 	free(vec2);
 	free(outVec);
+}
 
-	// wait for the GPU to finish
-	// cudaDeviceSynchronize();
+//---------------------------------------------------------------------------------------------------------------------
+int main()
+{
+	printf("\n--------------- Start from the CPU!\n");
 
-	printf("\nHello from the CPU!");
+	VectorAddition();
+
+	printf("\n--------------- End from the CPU!\n");
 
 	return 0;
 }
